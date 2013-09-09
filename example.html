@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flot stack example</title>
+    <link rel="stylesheet" href="example.css">
+</head>
+<body>
+<div id="placeholder1" class="diagram"></div>
+<div id="placeholder2" class="diagram"></div>
+<div id="placeholder3" class="diagram"></div>
+<script src="jquery-1.10.2.min.js"></script>
+<script src="jquery.flot.js"></script>
+<!--<script src="jquery.flot.stack.original.js"></script>-->
+<script src="jquery.flot.group.js"></script>
+<script src="jquery.flot.stacksplit.js"></script>
+<script>
+    $(function () {
+        var options = {
+            asBars: {
+                series: {
+                    stack: true,
+                    group: true,
+                    groupInterval: 1,
+                    bars: {
+                        show: true,
+//                        barWidth: 0.6,
+                        align: 'center',
+                        lineWidth: 1
+                    },
+                    points: {
+                        show: true
+                    },
+                    shadowSize: 0
+                }
+            },
+            asLines: {
+                series: {
+                       stack: true,
+                    group: true,
+                    groupInterval: 1,
+                    lines: {
+                        show: true,
+                           fill: true,
+                        lineWidth: 1
+                    },
+                    points: {
+                        show: true
+                    },
+                    shadowSize: 0
+                }
+            }
+        };
+        var data = [
+            {
+                label: "A",
+                data: [
+                    [0, -1],
+                    [0.2, -2],
+                    [1, 1],
+                    [1.1, 2],
+                    [1.9, -1],
+                    [2, -3]
+
+                ]
+            },
+            {
+                label: "B",
+                data: [
+                    [0.1, 1],
+                    [1.2, -1],
+                    [2, -2]
+                ]
+            },
+            {
+                label: "C",
+                data: [
+                    [0, -2],
+//                    [1, 2],
+                    [2, 2]
+                ]
+            }
+        ];
+        $.plot($('#placeholder1'), $.extend(true, [], data), options.asBars);
+        $.plot($('#placeholder2'), $.extend(true, [], data), options.asLines);
+    });
+</script>
+</body>
+</html>

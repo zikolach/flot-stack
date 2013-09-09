@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Generated files" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/jquery.flot.group.js" />
+        <item url="file://$PROJECT_DIR$/jquery.flot.stacksplit.js" />
+        <item url="file://$PROJECT_DIR$/jquery.flot.stack.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/jquery.flot.group.js" />
+      <root url="file://$PROJECT_DIR$/jquery.flot.stacksplit.js" />
+      <root url="file://$PROJECT_DIR$/jquery.flot.stack.js" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>
