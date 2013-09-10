@@ -12,7 +12,7 @@
 <script src="jquery.flot.js"></script>
 <!--<script src="jquery.flot.stack.original.js"></script>-->
 <script src="jquery.flot.group.js"></script>
-<script src="jquery.flot.stacksplit.js"></script>
+<script src="jquery.flot.simplestack.js"></script>
 <script>
     $(function () {
         var options = {
@@ -80,8 +80,38 @@
                 ]
             }
         ];
+        var datap = [
+            {
+                label: "A",
+                data: [
+                    [0, 1],
+                    [0.2, 2],
+                    [1, 1],
+                    [1.1, 2],
+                    [1.9, 1],
+                    [2, 3]
+
+                ]
+            },
+            {
+                label: "B",
+                data: [
+                    [0.1, 1],
+                    [1.2, 1],
+                    [2, 2]
+                ]
+            },
+            {
+                label: "C",
+                data: [
+                    [0, 2],
+//                    [1, 2],
+                    [2, 2]
+                ]
+            }
+        ];
         $.plot($('#placeholder1'), $.extend(true, [], data), options.asBars);
-        $.plot($('#placeholder2'), $.extend(true, [], data), options.asLines);
+        $.plot($('#placeholder2'), $.extend(true, [], datap), options.asLines);
     });
 </script>
 </body>

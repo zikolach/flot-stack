@@ -17,7 +17,37 @@
         interval = s.groupInterval;
         newpoints = {};
         i = 0;
-        ps = (s.bars != null) && s.bars ? 3 : 2;
+        format = s.datapoints.format;
+        if (!format) {
+          format = [];
+          format.push({
+            x: true,
+            number: true,
+            required: true
+          });
+          format.push({
+            y: true,
+            number: true,
+            required: true
+          });
+          if (s.bars.show || (s.lines.show && s.lines.fill)) {
+            autoscale = !!((s.bars.show && s.bars.zero) || (s.lines.show && s.lines.zero));
+            format.push({
+              y: true,
+              number: true,
+              required: false,
+              defaultValue: 0,
+              autoscale: autoscale
+            });
+            if (s.bars.horizontal) {
+              delete format[format.length - 1].y;
+              format[format.length - 1].x = true;
+            }
+          }
+          datapoints.format = format;
+        }
+        ps = format.length;
+        s.xaxis.used = s.yaxis.used = true;
         while (i < data.length) {
           x = Math.round(data[i][0] / interval) * interval;
           if (ps == null) {
@@ -42,32 +72,6 @@
         }
         datapoints.points = points;
         datapoints.pointsize = ps;
-        format = [];
-        format.push({
-          x: true,
-          number: true,
-          required: true
-        });
-        format.push({
-          y: true,
-          number: true,
-          required: true
-        });
-        if (s.bars.show || (s.lines.show && s.lines.fill)) {
-          autoscale = !!((s.bars.show && s.bars.zero) || (s.lines.show && s.lines.zero));
-          format.push({
-            y: true,
-            number: true,
-            required: false,
-            defaultValue: 0,
-            autoscale: autoscale
-          });
-          if (s.bars.horizontal) {
-            delete format[format.length - 1].y;
-            format[format.length - 1].x = true;
-          }
-        }
-        datapoints.format = format;
       };
       plot.hooks.processRawData.push(groupData);
     };
