@@ -10,6 +10,7 @@
 <div id="placeholder3" class="diagram"></div>
 <script src="jquery-1.10.2.min.js"></script>
 <script src="jquery.flot.js"></script>
+<!--<script src="jquery.flot.time.js"></script>-->
 <!--<script src="jquery.flot.stack.original.js"></script>-->
 <script src="jquery.flot.group.js"></script>
 <script src="jquery.flot.simplestack.js"></script>
@@ -17,13 +18,16 @@
     $(function () {
         var options = {
             asBars: {
+//                xaxis: {
+//                    mode: 'time',
+//                    timezone: 'browser'
+//                },
                 series: {
                     stack: true,
                     group: true,
                     groupInterval: 1,
                     bars: {
                         show: true,
-//                        barWidth: 0.6,
                         align: 'center',
                         lineWidth: 1
                     },
@@ -35,12 +39,12 @@
             },
             asLines: {
                 series: {
-                       stack: true,
+                    stack: true,
                     group: true,
                     groupInterval: 1,
                     lines: {
                         show: true,
-                           fill: true,
+                        fill: true,
                         lineWidth: 1
                     },
                     points: {
@@ -56,27 +60,25 @@
                 data: [
                     [0, -1],
                     [0.2, -2],
+                    [2, -3],
                     [1, 1],
                     [1.1, 2],
-                    [1.9, -1],
-                    [2, -3]
-
+                    [1.9, -1]
                 ]
             },
             {
                 label: "B",
                 data: [
+                    [2, -2],
                     [0.1, 1],
-                    [1.2, -1],
-                    [2, -2]
+                    [1.2, -1]
                 ]
             },
             {
                 label: "C",
                 data: [
-                    [0, -2],
-//                    [1, 2],
-                    [2, 2]
+                    [2, 2],
+                    [0, 2]
                 ]
             }
         ];
@@ -86,27 +88,25 @@
                 data: [
                     [0, 1],
                     [0.2, 2],
+                    [2, 3],
                     [1, 1],
                     [1.1, 2],
-                    [1.9, 1],
-                    [2, 3]
-
+                    [1.9, 1]
                 ]
             },
             {
                 label: "B",
                 data: [
+                    [2, 2],
                     [0.1, 1],
-                    [1.2, 1],
-                    [2, 2]
+                    [1.2, 1]
                 ]
             },
             {
                 label: "C",
                 data: [
-                    [0, 2],
-//                    [1, 2],
-                    [2, 2]
+                    [2, 2],
+                    [0, 2]
                 ]
             }
         ];

@@ -5,37 +5,41 @@
 
   init = (plot) ->
 
-    baseHash = {}
-    baseArray = []
+    baseHash = null
+    baseArray = null
+    groupInterval = 0
+    offset = 0
 
-    countBases = (plot, s, data, datapoints) ->
-      console.log 'count ' + s.label
-      if datapoints.pointsize?
-        for x in datapoints.points by datapoints.pointsize
-          if baseHash[x]
-            baseHash[x].cnt++
-          else
-            baseHash[x] =
-              cnt: 1
-              pos: 0
-              neg: 0
-            baseArray.push x
-      else
-        data.forEach (point) ->
-          x = point[0]
-          if baseHash[x]
-            baseHash[x]++
-          else
-            baseHash[x] =
-              cnt: 1
-              pos: 0
-              neg: 0
-            baseArray.push x
-      baseArray = baseArray.sort (a, b) -> a > b
+    countBases = (data) ->
+      baseHash = {}
+      baseArray = []
+      data.forEach (s) ->
+        if s.stack? and s.stack
+          s.data.forEach (point) ->
+            x = point[0]
+            x = Math.round((x - offset) / groupInterval) * groupInterval + offset if groupInterval > 0
+            if baseHash[x]
+              baseHash[x].cnt++
+            else
+              baseHash[x] =
+                cnt: 1
+                pos: 0
+                neg: 0
+              baseArray.push x
+      baseArray = baseArray.sort()
+#      console.log(baseArray)
       return
 
-    stackData = (plot, s, data, datapoints) ->
-      console.log 'stack ' + s.label
+    stackData = (plot, s, datapoints) ->
+#      console.log 'stack ' + s.label
+
+      if s.group? and s.group
+        groupInterval = s.groupInterval || 0
+        opt = s.xaxis.options
+        if opt.mode is 'time' and opt.timezone is 'browser'
+          offset = (new Date()).getTimezoneOffset() * 60000
+
+      countBases plot.getData() if not baseHash
       return if not s.stack? or s.stack is false
 
       points = datapoints.points
@@ -48,27 +52,27 @@
         x = points[i]
         y = points[i+1]
 
-        if y > 0
+        if y >= 0
           pointsHash[x] = [
             x
             y + baseHash[x].pos
             baseHash[x].pos
           ]
-          baseHash[points[i]].pos += y
+          baseHash[x].pos += y
         else
           pointsHash[x] = [
             x
             y + baseHash[x].neg
             baseHash[x].neg
           ]
-          baseHash[points[i]].neg += y
+          baseHash[x].neg += y
 
         i += ps
       # add missed points
       for x, base of baseHash
         if not pointsHash[x]?
           pointsHash[x] = [
-            x
+            parseFloat(x)
             base.pos
             base.pos
           ]
@@ -83,12 +87,12 @@
           points = points.concat pointsHash[baseArray[i]]
         i++
 
+#      console.log points
       datapoints.points = points
       datapoints.pointsize = ps
       return
 
-    plot.hooks.processRawData.push countBases
-    plot.hooks.processRawData.push stackData
+    plot.hooks.processDatapoints.push stackData
     return
 
   $.plot.plugins.push

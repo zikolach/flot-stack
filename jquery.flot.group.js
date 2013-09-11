@@ -10,13 +10,18 @@
     init = function(plot) {
       var groupData;
       groupData = function(plot, s, data, datapoints) {
-        var autoscale, format, i, interval, key, newpoints, point, points, ps, x;
+        var autoscale, format, i, interval, key, newpoints, offset, opt, point, points, ps, x;
         if ((s.group == null) || !s.group) {
           return;
         }
         interval = s.groupInterval;
         newpoints = {};
         i = 0;
+        opt = s.xaxis.options;
+        offset = 0;
+        if (opt.mode === 'time' && opt.timezone === 'browser') {
+          offset = (new Date()).getTimezoneOffset() * 60000;
+        }
         format = s.datapoints.format;
         if (!format) {
           format = [];
@@ -49,7 +54,7 @@
         ps = format.length;
         s.xaxis.used = s.yaxis.used = true;
         while (i < data.length) {
-          x = Math.round(data[i][0] / interval) * interval;
+          x = Math.round((data[i][0] - offset) / interval) * interval + offset;
           if (ps == null) {
             ps = data[i].length;
           }

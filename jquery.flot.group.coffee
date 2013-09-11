@@ -10,7 +10,10 @@
       interval = s.groupInterval
       newpoints = {}
       i = 0
-
+      opt = s.xaxis.options
+      offset = 0
+      if opt.mode is 'time' and opt.timezone is 'browser'
+        offset = (new Date()).getTimezoneOffset() * 60000
 
       format = s.datapoints.format
       if not format
@@ -41,7 +44,7 @@
       s.xaxis.used = s.yaxis.used = true
 
       while (i < data.length)
-        x = Math.round(data[i][0] / interval) * interval
+        x = Math.round((data[i][0] - offset) / interval) * interval + offset
         ps = data[i].length if not ps?
         if not newpoints[x]?
           newpoints[x] = []

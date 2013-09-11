@@ -8,50 +8,49 @@
       }
     };
     init = function(plot) {
-      var baseArray, baseHash, countBases, stackData;
-      baseHash = {};
-      baseArray = [];
-      countBases = function(plot, s, data, datapoints) {
-        var x, _i, _len, _ref, _ref1;
-        console.log('count ' + s.label);
-        if (datapoints.pointsize != null) {
-          _ref1 = datapoints.points;
-          _ref = datapoints.pointsize;
-          for ((_ref > 0 ? (_i = 0, _len = _ref1.length) : _i = _ref1.length - 1); _ref > 0 ? _i < _len : _i >= 0; _i += _ref) {
-            x = _ref1[_i];
-            if (baseHash[x]) {
-              baseHash[x].cnt++;
-            } else {
-              baseHash[x] = {
-                cnt: 1,
-                pos: 0,
-                neg: 0
-              };
-              baseArray.push(x);
-            }
+      var baseArray, baseHash, countBases, groupInterval, offset, stackData;
+      baseHash = null;
+      baseArray = null;
+      groupInterval = 0;
+      offset = 0;
+      countBases = function(data) {
+        baseHash = {};
+        baseArray = [];
+        data.forEach(function(s) {
+          if ((s.stack != null) && s.stack) {
+            return s.data.forEach(function(point) {
+              var x;
+              x = point[0];
+              if (groupInterval > 0) {
+                x = Math.round((x - offset) / groupInterval) * groupInterval + offset;
+              }
+              if (baseHash[x]) {
+                return baseHash[x].cnt++;
+              } else {
+                baseHash[x] = {
+                  cnt: 1,
+                  pos: 0,
+                  neg: 0
+                };
+                return baseArray.push(x);
+              }
+            });
           }
-        } else {
-          data.forEach(function(point) {
-            x = point[0];
-            if (baseHash[x]) {
-              return baseHash[x]++;
-            } else {
-              baseHash[x] = {
-                cnt: 1,
-                pos: 0,
-                neg: 0
-              };
-              return baseArray.push(x);
-            }
-          });
-        }
-        baseArray = baseArray.sort(function(a, b) {
-          return a > b;
         });
+        baseArray = baseArray.sort();
       };
-      stackData = function(plot, s, data, datapoints) {
-        var base, i, points, pointsHash, ps, x, y;
-        console.log('stack ' + s.label);
+      stackData = function(plot, s, datapoints) {
+        var base, i, opt, points, pointsHash, ps, x, y;
+        if ((s.group != null) && s.group) {
+          groupInterval = s.groupInterval || 0;
+          opt = s.xaxis.options;
+          if (opt.mode === 'time' && opt.timezone === 'browser') {
+            offset = (new Date()).getTimezoneOffset() * 60000;
+          }
+        }
+        if (!baseHash) {
+          countBases(plot.getData());
+        }
         if ((s.stack == null) || s.stack === false) {
           return;
         }
@@ -62,19 +61,19 @@
         while (i < points.length) {
           x = points[i];
           y = points[i + 1];
-          if (y > 0) {
+          if (y >= 0) {
             pointsHash[x] = [x, y + baseHash[x].pos, baseHash[x].pos];
-            baseHash[points[i]].pos += y;
+            baseHash[x].pos += y;
           } else {
             pointsHash[x] = [x, y + baseHash[x].neg, baseHash[x].neg];
-            baseHash[points[i]].neg += y;
+            baseHash[x].neg += y;
           }
           i += ps;
         }
         for (x in baseHash) {
           base = baseHash[x];
           if (pointsHash[x] == null) {
-            pointsHash[x] = [x, base.pos, base.pos];
+            pointsHash[x] = [parseFloat(x), base.pos, base.pos];
           }
         }
         ps = 3;
@@ -89,8 +88,7 @@
         datapoints.points = points;
         datapoints.pointsize = ps;
       };
-      plot.hooks.processRawData.push(countBases);
-      plot.hooks.processRawData.push(stackData);
+      plot.hooks.processDatapoints.push(stackData);
     };
     $.plot.plugins.push({
       init: init,
