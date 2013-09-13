@@ -37,7 +37,9 @@
             });
           }
         });
-        baseArray = baseArray.sort();
+        baseArray = baseArray.sort(function(a, b) {
+          return a - b;
+        });
       };
       stackData = function(plot, s, datapoints) {
         var base, i, opt, points, pointsHash, ps, x, y;

@@ -3,12 +3,14 @@
     <properties>
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/jquery.flot.group.js" />
+        <item url="file://$PROJECT_DIR$/example.js" />
         <item url="file://$PROJECT_DIR$/jquery.flot.simplestack.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
       <root url="file://$PROJECT_DIR$/jquery.flot.stack.js" />
       <root url="file://$PROJECT_DIR$/jquery.flot.group.js" />
+      <root url="file://$PROJECT_DIR$/example.js" />
       <root url="file://$PROJECT_DIR$/jquery.flot.simplestack.js" />
     </CLASSES>
     <SOURCES />

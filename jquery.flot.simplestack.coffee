@@ -26,7 +26,7 @@
                 pos: 0
                 neg: 0
               baseArray.push x
-      baseArray = baseArray.sort()
+      baseArray = baseArray.sort (a, b) -> a - b
 #      console.log(baseArray)
       return
 
